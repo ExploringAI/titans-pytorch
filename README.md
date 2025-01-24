@@ -64,7 +64,44 @@ sampled = transformer.sample(token_ids[:, :4], 512)
 $ pip install .[examples]
 ```
 
-Then modify `train_mac.py` and run it to query nature
+Then modify `train_mac.py` and run it to query nature.
+1. Understand What to Modify
+From the README.md​README, the script train_mac.py is used for training with some modifications to query nature. This likely involves adjusting the model, input data, or logging to suit the "query nature" concept.
+
+2. Modifications
+Data Input: Ensure the input data (data/enwik8.gz in the current script) is replaced or supplemented with data relevant to "nature." For example, if querying nature means analyzing biological, environmental, or ecological text, provide such a dataset.
+Logging or Output: Modify how results are logged and interpreted. You might want to customize how the output sequences or model responses are saved or visualized.
+Task Objective: If querying nature requires different outputs (e.g., predictions, summaries, or insights), adjust the training loop or model outputs accordingly.
+3. Steps to Modify the Script
+Open train_mac.py and make the following changes:
+
+Update Dataset Path: Replace:
+
+```bash
+with gzip.open('./data/enwik8.gz') as file:
+```
+With:
+
+```bash
+with gzip.open('./data/nature_dataset.gz') as file:
+```
+Ensure nature_dataset.gz contains relevant content.
+
+Adjust Model Parameters: You can adjust parameters such as sequence length or transformer dimensions for better adaptation to the new dataset.
+
+Enable Custom Output: In the SHOULD_GENERATE block, modify the way generated text is printed:
+
+```bash
+if SHOULD_GENERATE and i % GENERATE_EVERY == 0:
+    model.eval()
+    inp = random.choice(val_dataset)[:PRIME_LENGTH]
+    prime = decode_tokens(inp)
+    print(f'Prime Text: \n{prime}')
+    sample = model.sample(inp[None, ...], GENERATE_LENGTH)
+    output_str = decode_tokens(sample[0])
+    print(f'Generated Query Response: \n{output_str}')
+```
+4. Add Nature-Specific Metrics: Incorporate evaluation metrics or logging related to the nature-focused task.
 
 ```bash
 $ python train_mac.py
